@@ -15,6 +15,47 @@ function printResults(answer, ...guesses) {
     if (remaining.length === 1) return 'Success';
     else return 'Failure';
 }
+// find the top x number of words
+function findBestGuesses(possibleAnswers, possibleGuesses) {
+    let bestWords = [];
+    let numBestWords = 10;
+
+    // iterate through all possible guesses
+    for (let i = 0; i < possibleGuesses.length; i++) {
+        console.clear();
+        console.log(i);
+        let guess = possibleGuesses[i];
+        let sumRemaining = 0;
+
+        // iterate through all possible answers
+        for (let j = 0; j < possibleAnswers.length; j++) {
+            let answer = possibleAnswers[j];
+
+            // accum number of remaining possibilities after making guess
+            let guessResults = checkGuess(guess, answer);
+            let reduced = filterAnswers(guessResults, possibleAnswers);
+            let numRemaining = reduced.length;
+            sumRemaining += numRemaining;
+        }
+
+        // find avg and update the best word if better than the current best
+        let avgRemaining = sumRemaining / possibleAnswers.length;
+
+        // if (bestWords.length < numBestWords) {
+        //     bestWords.push({word: guess, avgRemaining: avgRemaining.toFixed(2)})
+        //     bestWords.sort((a, b) => a.avgRemaining - b.avgRemaining);
+        // } else if (avgRemaining < bestWords[bestWords.length - 1].avgRemaining) {
+        //     bestWords.push({word: guess, avgRemaining: avgRemaining.toFixed(2)})
+        //     bestWords.sort((a, b) => a.avgRemaining - b.avgRemaining);
+        //     bestWords.pop();
+        // }
+
+        bestWords.push({word: guess, avgRemaining: avgRemaining.toFixed(2)});
+    }
+
+    bestWords.sort((a, b) => a.avgRemaining - b.avgRemaining);
+    return bestWords;
+}
 // find the word that reduces solutions the most on average on one guess
 function findBestGuess(possibleAnswers, possibleGuesses) {
     let bestWord;
@@ -22,6 +63,7 @@ function findBestGuess(possibleAnswers, possibleGuesses) {
 
     // iterate through all possible guesses
     for (let i = 0; i < possibleGuesses.length; i++) {
+        console.clear();
         console.log(i);
         let guess = possibleGuesses[i];
         let sumRemaining = 0;
@@ -148,4 +190,5 @@ function getCharCounts(word) {
 // console.log(checkGuess('aback', 'quack'));
 // console.log(filterAnswers(checkGuess('aback', 'quack'), ['quack', 'bacon', 'auack', 'sonic']));
 // console.log(findBestGuess(answers.slice(0, 300), allWords.slice(0, 300));
-console.log(printResults('ethos', 'heart', 'theme', 'eight', 'ethos'));
+// console.log(printResults('ethos', 'heart', 'theme', 'eight', 'ethos'));
+// console.log(findBestGuesses(answers, allWords));
