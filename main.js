@@ -2,14 +2,19 @@ const answers = require('./answers');
 const helpers = require('./helpers');
 const allWords = [...answers, ...helpers].sort();
 
-// let result = findBestGuess(answers, allWords);
-// console.log(result.avgRemaining);
-
-// console.log(filterAnswers('words', 'quack', ['quack', 'bacon', 'auack', 'sonic']));
-// console.log(checkGuess('aback', 'quack'));
-// console.log(getExactCounts('aaabb', 'aaccb'));
-// console.log(getCharCounts('comic'));
-
+// print results after knowing the answer
+function printResults(answer, ...guesses) {
+    let remaining;
+    for (let i = 0; i < guesses.length; i++) {
+        let guess = guesses[i];
+        console.log("Guess: " + guess);
+        console.log("Remaining:");
+        remaining = filterAnswers(checkGuess(guess, answer), answers);
+        console.log(remaining.length, remaining);
+    }
+    if (remaining.length === 1) return 'Success';
+    else return 'Failure';
+}
 // find the word that reduces solutions the most on average on one guess
 function findBestGuess(possibleAnswers, possibleGuesses) {
     let bestWord;
@@ -26,7 +31,8 @@ function findBestGuess(possibleAnswers, possibleGuesses) {
             let answer = possibleAnswers[j];
 
             // accum number of remaining possibilities after making guess
-            let reduced = filterAnswers(guess, answer, possibleAnswers);
+            let guessResults = checkGuess(guess, answer);
+            let reduced = filterAnswers(guessResults, possibleAnswers);
             let numRemaining = reduced.length;
             sumRemaining += numRemaining;
         }
@@ -41,10 +47,8 @@ function findBestGuess(possibleAnswers, possibleGuesses) {
 
     return {bestWord: bestWord, avgRemaining: minAvg};
 }
-
 // return remaining solutions after making a guess
-function filterAnswers(guess, answer, possibleAnswers) {
-    let guessResults = checkGuess(guess, answer);
+function filterAnswers(guessResults, possibleAnswers) {
     let possibleAnswersCopy = [...possibleAnswers];
 
     let reduced = possibleAnswersCopy.filter(word => {
@@ -86,7 +90,6 @@ function filterAnswers(guess, answer, possibleAnswers) {
 
     return reduced;
 }
-
 // return an object holding guess results
 function checkGuess(guess, answer) {
     let guessResults = {
@@ -113,7 +116,6 @@ function checkGuess(guess, answer) {
 
     return guessResults;
 }
-
 // if guess has repeating chars numbering more than answer's, return answer's counts
 function getExactCounts(guess, answer) {
     let exactCounts = {}
@@ -129,7 +131,6 @@ function getExactCounts(guess, answer) {
 
     return exactCounts;
 }
-
 // count the chars
 function getCharCounts(word) {
     let counts = {};
@@ -140,3 +141,11 @@ function getCharCounts(word) {
     }
     return counts;
 }
+
+// // testing individual functions
+// console.log(getCharCounts('comic'));
+// console.log(getExactCounts('aaabb', 'aaccb'));
+// console.log(checkGuess('aback', 'quack'));
+// console.log(filterAnswers(checkGuess('aback', 'quack'), ['quack', 'bacon', 'auack', 'sonic']));
+// console.log(findBestGuess(answers.slice(0, 300), allWords.slice(0, 300));
+console.log(printResults('ethos', 'heart', 'theme', 'eight', 'ethos'));
