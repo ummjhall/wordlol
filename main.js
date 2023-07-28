@@ -15,6 +15,38 @@ function printResults(answer, ...guesses) {
     if (remaining.length === 1) return 'Success';
     else return 'Failure';
 }
+// find best nth guess after knowing the answer
+function checkBestNext(answer, ...guesses) {
+    let remaining = [...answers];
+
+    for (let i = 0; i < guesses.length; i++) {
+        let guess = guesses[i];
+        let guessResults = checkGuess(guess, answer);
+        remaining = filterAnswers(guessResults, remaining);
+    }
+
+    if (remaining.length === 1) return remaining[0];
+    else return findBestGuess(remaining, allWords);
+}
+// find the avg remaining after a predetermined set of guesses
+function testGuessSet(possibleAnswers, ...guesses) {
+    let sumRemaining = 0;
+
+    for (let i = 0; i < possibleAnswers.length; i++) {
+        let answer = possibleAnswers[i];
+        let reduced = [...possibleAnswers];
+
+        for (let j = 0; j < guesses.length; j++) {
+            let guessResults = checkGuess(guesses[j], answer);
+            reduced = filterAnswers(guessResults, reduced);
+        }
+
+        sumRemaining += reduced.length;
+    }
+
+    let avgRemaining = sumRemaining / possibleAnswers.length;
+    return avgRemaining;
+}
 // find the top x number of words
 function findBestGuesses(possibleAnswers, possibleGuesses) {
     let bestWords = [];
@@ -190,5 +222,7 @@ function getCharCounts(word) {
 // console.log(checkGuess('aback', 'quack'));
 // console.log(filterAnswers(checkGuess('aback', 'quack'), ['quack', 'bacon', 'auack', 'sonic']));
 // console.log(findBestGuess(answers.slice(0, 300), allWords.slice(0, 300));
-// console.log(printResults('ethos', 'heart', 'theme', 'eight', 'ethos'));
 // console.log(findBestGuesses(answers, allWords));
+// console.log(testGuessSet(answers, 'heart', 'lions', 'pudgy', 'backs', 'femme'));
+// console.log(checkBestNext('ethos', 'naieo', 'stove'));
+// console.log(printResults('ethos', 'heart', 'theme', 'eight', 'ethos'));
