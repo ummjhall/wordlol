@@ -1,5 +1,6 @@
 const answers = require('./answers');
 const helpers = require('./helpers');
+const bestGuesses = require('./best-guesses');
 const allWords = [...answers, ...helpers].sort();
 
 // print results after knowing the answer
@@ -225,12 +226,17 @@ function getCharCounts(word) {
 }
 
 // // testing individual functions
-// console.log(getCharCounts('comic'));
-// console.log(getExactCounts('aaabb', 'aaccb'));
-// console.log(checkGuess('aback', 'quack'));
-// console.log(filterAnswers(checkGuess('aback', 'quack'), ['quack', 'bacon', 'auack', 'sonic']));
-// console.log(findBestGuess(answers.slice(0, 300), allWords.slice(0, 300));
-// console.log(findBestGuesses(answers, allWords));
-// console.log(testGuessSet(answers, 'heart', 'lions', 'pudgy', 'backs', 'femme'));
-// console.log(checkBestNext('ethos', 'naieo', 'stove'));
 // console.log(printResults('ethos', 'heart', 'theme', 'eight', 'ethos'));
+// console.log(checkBestNext('ethos', 'naieo', 'stove'));
+// console.log(testGuessSet(answers, 'heart', 'lions', 'pudgy', 'backs', 'femme'));
+// console.log(findBestGuesses(answers, allWords));
+// console.log(findBestGuess(answers.slice(0, 300), allWords.slice(0, 300));
+// console.log(filterAnswers(checkGuess('aback', 'quack'), ['quack', 'bacon', 'auack', 'sonic']));
+// console.log(checkGuess('aback', 'quack'));
+// console.log(getExactCounts('aaabb', 'aaccb'));
+// console.log(getCharCounts('comic'));
+
+// // curiosity
+// console.log(bestGuesses.filter(word => word.includes('a') && word.includes('e') && word.includes('i') && word.includes('o')));
+// console.log(allWords.filter(word => !word.includes('a') && !word.includes('e') && !word.includes('i') && !word.includes('o') && !word.includes('u') && word.includes('y')));
+// console.log(bestGuesses.filter(word => answers.includes(word)));
