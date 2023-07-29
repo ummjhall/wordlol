@@ -3,6 +3,10 @@ const helpers = require('./helpers');
 const bestGuesses = require('./best-guesses');
 const allWords = [...answers, ...helpers].sort();
 
+// Potential for extension:
+//    Make an interface
+//    Extend findWords() to accept characters to include somewhere in the word
+
 // print results after knowing the answer
 function printResults(answer, ...guesses) {
     let remaining;
@@ -10,7 +14,7 @@ function printResults(answer, ...guesses) {
         let guess = guesses[i];
         console.log("Guess: " + guess);
         console.log("Remaining:");
-        remaining = filterAnswers(checkGuess(guess, answer), answers);
+        remaining = filterAnswers(_checkGuess(guess, answer), answers);
         console.log(remaining.length, remaining);
     }
     if (remaining.length === 1) return 'Success';
@@ -36,7 +40,7 @@ function checkBestNext(answer, ...guesses) {
     for (let i = 0; i < guesses.length; i++) {
         let guess = guesses[i];
         console.log("Guess: " + guess);
-        let guessResults = checkGuess(guess, answer);
+        let guessResults = _checkGuess(guess, answer);
         // console.log("Guess results:\n" + guessResults);
         remaining = filterAnswers(guessResults, remaining);
         console.log("Number remaining: " + remaining.length);
@@ -56,7 +60,7 @@ function testGuessSet(possibleAnswers, ...guesses) {
         let reduced = [...possibleAnswers];
 
         for (let j = 0; j < guesses.length; j++) {
-            let guessResults = checkGuess(guesses[j], answer);
+            let guessResults = _checkGuess(guesses[j], answer);
             reduced = filterAnswers(guessResults, reduced);
         }
 
@@ -72,7 +76,7 @@ function testGuessSet(possibleAnswers, ...guesses) {
     let avgRemaining = sumRemaining / possibleAnswers.length;
     return {avgRemaining: avgRemaining, maxRemaining: maxRemaining, minRemaining: minRemaining};
 }
-// find the best words or best x num of words
+// find the best words or best x number of words
 function findBestGuesses(possibleAnswers, possibleGuesses) {
     let bestWords = [];
     // let numBestWords = 10;
@@ -89,7 +93,7 @@ function findBestGuesses(possibleAnswers, possibleGuesses) {
             let answer = possibleAnswers[j];
 
             // accum number of remaining possibilities after making guess
-            let guessResults = checkGuess(guess, answer);
+            let guessResults = _checkGuess(guess, answer);
             let reduced = filterAnswers(guessResults, possibleAnswers);
             let numRemaining = reduced.length;
             sumRemaining += numRemaining;
@@ -130,7 +134,7 @@ function findBestGuess(possibleAnswers, possibleGuesses) {
             let answer = possibleAnswers[j];
 
             // accum number of remaining possibilities after making guess
-            let guessResults = checkGuess(guess, answer);
+            let guessResults = _checkGuess(guess, answer);
             let reduced = filterAnswers(guessResults, possibleAnswers);
             let numRemaining = reduced.length;
             sumRemaining += numRemaining;
@@ -175,7 +179,7 @@ function filterAnswers(guessResults, possibleAnswers) {
 
         // eliminate if known char counts incorrect
         // console.log('THIRD FILTER');
-        let wordCounts = getCharCounts(word);
+        let wordCounts = _getCharCounts(word);
         for (char in guessResults.exactCounts) {
             let count = guessResults.exactCounts[char];
             if (wordCounts[char] !== count) {
@@ -202,7 +206,7 @@ function filterAnswers(guessResults, possibleAnswers) {
     return reduced;
 }
 // return an object holding guess results
-function checkGuess(guess, answer) {
+function _checkGuess(guess, answer) {
     let guessResults = {
         correct: {},
         close: {},
@@ -223,15 +227,15 @@ function checkGuess(guess, answer) {
         }
     }
 
-    guessResults.exactCounts = getExactCounts(guess, answer);
+    guessResults.exactCounts = _getExactCounts(guess, answer);
 
     return guessResults;
 }
 // if guess has repeating chars numbering more than answer's, return answer's counts
-function getExactCounts(guess, answer) {
+function _getExactCounts(guess, answer) {
     let exactCounts = {}
-    let guessCounts = getCharCounts(guess);
-    let answerCounts = getCharCounts(answer);
+    let guessCounts = _getCharCounts(guess);
+    let answerCounts = _getCharCounts(answer);
 
     for (char in guessCounts) {
         let count = guessCounts[char];
@@ -243,7 +247,7 @@ function getExactCounts(guess, answer) {
     return exactCounts;
 }
 // count the chars
-function getCharCounts(word) {
+function _getCharCounts(word) {
     let counts = {};
     for (let i = 0; i < word.length; i++) {
         let char = word[i];
@@ -267,7 +271,7 @@ function getCharCounts(word) {
 
 // // curiosity
 // naieo the only word with a e i and o
-// console.log(bestGuesses.filter(word => word.includes('a') && word.includes('e') && word.includes('i') && word.includes('o')));
+// console.log(allWords.filter(word => word.includes('a') && word.includes('e') && word.includes('i') && word.includes('o')));
 // 53 words with no aeiou, 1 word with no aeiou or y
 // console.log(allWords.filter(word => !word.includes('a') && !word.includes('e') && !word.includes('i') && !word.includes('o') && !word.includes('u')));
 // best guesses that are also possible solutions
