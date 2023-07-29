@@ -53,7 +53,7 @@ function checkBestNext(answer, ...guesses) {
 function testGuessSet(possibleAnswers, ...guesses) {
     let sumRemaining = 0;
     let maxRemaining = -Infinity;
-    let minRemaining = Infinity;
+    // let minRemaining = Infinity;
 
     for (let i = 0; i < possibleAnswers.length; i++) {
         let answer = possibleAnswers[i];
@@ -68,13 +68,13 @@ function testGuessSet(possibleAnswers, ...guesses) {
         if (reduced.length > maxRemaining) {
             maxRemaining = reduced.length;
         }
-        if (reduced.length < minRemaining) {
-            minRemaining = reduced.length;
-        }
+        // if (reduced.length < minRemaining) {
+        //     minRemaining = reduced.length;
+        // }
     }
 
     let avgRemaining = sumRemaining / possibleAnswers.length;
-    return {avgRemaining: avgRemaining, maxRemaining: maxRemaining, minRemaining: minRemaining};
+    return {guess: guesses, avgRemaining: avgRemaining, maxRemaining: maxRemaining};
 }
 // find the best words or best x number of words
 function findBestGuesses(possibleAnswers, possibleGuesses) {
