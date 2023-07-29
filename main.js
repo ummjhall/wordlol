@@ -31,6 +31,8 @@ function checkBestNext(answer, ...guesses) {
 // find the avg remaining after a predetermined set of guesses
 function testGuessSet(possibleAnswers, ...guesses) {
     let sumRemaining = 0;
+    let maxRemaining = -Infinity;
+    let minRemaining = Infinity;
 
     for (let i = 0; i < possibleAnswers.length; i++) {
         let answer = possibleAnswers[i];
@@ -42,10 +44,16 @@ function testGuessSet(possibleAnswers, ...guesses) {
         }
 
         sumRemaining += reduced.length;
+        if (reduced.length > maxRemaining) {
+            maxRemaining = reduced.length;
+        }
+        if (reduced.length < minRemaining) {
+            minRemaining = reduced.length;
+        }
     }
 
     let avgRemaining = sumRemaining / possibleAnswers.length;
-    return avgRemaining;
+    return {avgRemaining: avgRemaining, maxRemaining: maxRemaining, minRemaining: minRemaining};
 }
 // find the top x number of words
 function findBestGuesses(possibleAnswers, possibleGuesses) {
