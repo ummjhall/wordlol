@@ -22,12 +22,15 @@ function checkBestNext(answer, ...guesses) {
 
     for (let i = 0; i < guesses.length; i++) {
         let guess = guesses[i];
+        console.log("Guess: " + guess);
         let guessResults = checkGuess(guess, answer);
+        // console.log("Guess results:\n" + guessResults);
         remaining = filterAnswers(guessResults, remaining);
+        console.log("Number remaining: " + remaining.length);
     }
 
     if (remaining.length === 1) return remaining[0];
-    else return findBestGuess(remaining, allWords);
+    else return findBestGuesses(remaining, allWords);
 }
 // find the avg remaining after a predetermined set of guesses
 function testGuessSet(possibleAnswers, ...guesses) {
@@ -56,10 +59,10 @@ function testGuessSet(possibleAnswers, ...guesses) {
     let avgRemaining = sumRemaining / possibleAnswers.length;
     return {avgRemaining: avgRemaining, maxRemaining: maxRemaining, minRemaining: minRemaining};
 }
-// find the top x number of words
+// find the best words or best x num of words
 function findBestGuesses(possibleAnswers, possibleGuesses) {
     let bestWords = [];
-    let numBestWords = 10;
+    // let numBestWords = 10;
 
     // iterate through all possible guesses
     for (let i = 0; i < possibleGuesses.length; i++) {
@@ -132,40 +135,52 @@ function findBestGuess(possibleAnswers, possibleGuesses) {
 }
 // return remaining solutions after making a guess
 function filterAnswers(guessResults, possibleAnswers) {
-    let possibleAnswersCopy = [...possibleAnswers];
+    let reduced = [...possibleAnswers];
 
-    let reduced = possibleAnswersCopy.filter(word => {
+    reduced = reduced.filter(word => {
         // eliminate if correct letters not in correct spot
+        // console.log('FIRST FILTER');
         for (char in guessResults.correct) {
             let index = guessResults.correct[char];
             if (word[index] !== char) {
+                // console.log("Correct letters ok: false");
                 return false;
             }
+            // else console.log("Correct letters ok: true");
         }
 
         // eliminate if misplaced letters not present or in same spot
+        // console.log('SECOND FILTER');
         for (char in guessResults.close) {
             let index = guessResults.close[char];
             if (!word.includes(char) || word[index] === char) {
+                // console.log("Close letters ok: false");
                 return false;
             }
+            // else console.log("Close letters ok: true");
         }
 
         // eliminate if known char counts incorrect
+        // console.log('THIRD FILTER');
         let wordCounts = getCharCounts(word);
         for (char in guessResults.exactCounts) {
             let count = guessResults.exactCounts[char];
             if (wordCounts[char] !== count) {
+                // console.log("Char counts ok: false");
                 return false;
             }
+            // else console.log("Char counts ok: true");
         }
 
         // eliminate if incorrect letters present
-        for (let i = 0; i < guessResults.incorrect; i++) {
+        // console.log('FOURTH FILTER');
+        for (let i = 0; i < guessResults.incorrect.length; i++) {
             let char = guessResults.incorrect[i];
             if (word.includes(char)) {
+                // console.log("Incorrect ok: false");
                 return false;
             }
+            // else console.log("Incorrect ok: true");
         }
 
         return true;
@@ -238,5 +253,5 @@ function getCharCounts(word) {
 
 // // curiosity
 // console.log(bestGuesses.filter(word => word.includes('a') && word.includes('e') && word.includes('i') && word.includes('o')));
-// console.log(allWords.filter(word => !word.includes('a') && !word.includes('e') && !word.includes('i') && !word.includes('o') && !word.includes('u') && word.includes('y')));
+// console.log(allWords.filter(word => !word.includes('a') && !word.includes('e') && !word.includes('i') && !word.includes('o') && !word.includes('u')));
 // console.log(bestGuesses.filter(word => answers.includes(word)));
