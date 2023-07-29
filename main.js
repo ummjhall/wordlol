@@ -16,6 +16,19 @@ function printResults(answer, ...guesses) {
     if (remaining.length === 1) return 'Success';
     else return 'Failure';
 }
+// find a word containing specified letters ignoring underscores
+function findWords(string) {
+    words = [...allWords];
+    words = words.filter(word => {
+        for (let i = 0; i < string.length; i++) {
+            if (string[i] !== '_') {
+                if (string[i] !== word[i]) return false;
+            }
+        }
+        return true;
+    });
+    return words;
+}
 // find best nth guess after knowing the answer
 function checkBestNext(answer, ...guesses) {
     let remaining = [...answers];
@@ -242,6 +255,7 @@ function getCharCounts(word) {
 
 // // testing individual functions
 // console.log(printResults('ethos', 'heart', 'theme', 'eight', 'ethos'));
+// console.log(findWords('c_tch'));
 // console.log(checkBestNext('ethos', 'naieo', 'stove'));
 // console.log(testGuessSet(answers, 'heart', 'lions', 'pudgy', 'backs', 'femme'));
 // console.log(findBestGuesses(answers, allWords));
@@ -252,6 +266,9 @@ function getCharCounts(word) {
 // console.log(getCharCounts('comic'));
 
 // // curiosity
+// naieo the only word with a e i and o
 // console.log(bestGuesses.filter(word => word.includes('a') && word.includes('e') && word.includes('i') && word.includes('o')));
+// 53 words with no aeiou, 1 word with no aeiou or y
 // console.log(allWords.filter(word => !word.includes('a') && !word.includes('e') && !word.includes('i') && !word.includes('o') && !word.includes('u')));
+// best guesses that are also possible solutions
 // console.log(bestGuesses.filter(word => answers.includes(word)));
