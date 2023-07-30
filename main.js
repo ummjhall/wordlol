@@ -9,12 +9,12 @@ const allWords = [...answers, ...helpers].sort();
 
 // print results after knowing the answer
 function printResults(answer, ...guesses) {
-    let remaining;
+    let remaining = [...answers];
     for (let i = 0; i < guesses.length; i++) {
         let guess = guesses[i];
+        remaining = filterAnswers(_checkGuess(guess, answer), remaining);
         console.log("Guess: " + guess);
         console.log("Remaining:");
-        remaining = filterAnswers(_checkGuess(guess, answer), answers);
         console.log(remaining.length, remaining);
     }
     if (remaining.length === 1) return 'Success';
